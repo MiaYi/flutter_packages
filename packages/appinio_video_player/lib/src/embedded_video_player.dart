@@ -33,39 +33,49 @@ class _EmbeddedVideoPlayerState extends State<EmbeddedVideoPlayer> {
   Widget build(BuildContext context) {
     if (widget.customVideoPlayerController.videoPlayerController.value
         .isInitialized) {
-      return AspectRatio(
-        aspectRatio: widget.isFullscreen
-            ? widget.customVideoPlayerController.videoPlayerController.value
-                .aspectRatio
-            : widget.customVideoPlayerController.customVideoPlayerSettings
-                    .customAspectRatio ??
-                widget.customVideoPlayerController.videoPlayerController.value
-                    .aspectRatio,
-        child: Stack(
-          children: [
-            Container(
-              color: CupertinoColors.black,
-            ),
-            Center(
-              child: AspectRatio(
-                aspectRatio: widget.customVideoPlayerController
-                    .videoPlayerController.value.aspectRatio,
-                child: IgnorePointer(
-                  child: VideoPlayer(
-                    widget.customVideoPlayerController.videoPlayerController,
+      return Stack(
+        children: [
+          Center(
+            child: AspectRatio(
+              aspectRatio: widget.isFullscreen
+                  ? widget.customVideoPlayerController.videoPlayerController
+                      .value.aspectRatio
+                  : widget.customVideoPlayerController.customVideoPlayerSettings
+                          .customAspectRatio ??
+                      widget.customVideoPlayerController.videoPlayerController
+                          .value.aspectRatio,
+              child: Stack(
+                children: [
+                  Container(
+                    color: CupertinoColors.black,
                   ),
-                ),
+                  Center(
+                    child: AspectRatio(
+                      aspectRatio: widget.customVideoPlayerController
+                          .videoPlayerController.value.aspectRatio,
+                      child: IgnorePointer(
+                        child: VideoPlayer(
+                          widget.customVideoPlayerController
+                              .videoPlayerController,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Thumbnail(
+                    customVideoPlayerController:
+                        widget.customVideoPlayerController,
+                  ),
+                ],
               ),
             ),
-            Thumbnail(
-              customVideoPlayerController: widget.customVideoPlayerController,
-            ),
-            AllControlsOverlay(
+          ),
+          Positioned.fill(
+            child: AllControlsOverlay(
               customVideoPlayerController: widget.customVideoPlayerController,
               updateVideoState: _updateVideoState,
             ),
-          ],
-        ),
+          ),
+        ],
       );
     } else {
       return widget.customVideoPlayerController.customVideoPlayerSettings
