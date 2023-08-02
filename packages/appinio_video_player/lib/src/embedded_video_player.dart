@@ -7,11 +7,13 @@ import 'package:video_player/video_player.dart';
 class EmbeddedVideoPlayer extends StatefulWidget {
   final CustomVideoPlayerController customVideoPlayerController;
   final bool isFullscreen;
+  final Widget? customControlWidget;
 
   const EmbeddedVideoPlayer({
     Key? key,
     required this.customVideoPlayerController,
     this.isFullscreen = false,
+    this.customControlWidget,
   }) : super(key: key);
 
   @override
@@ -73,6 +75,7 @@ class _EmbeddedVideoPlayerState extends State<EmbeddedVideoPlayer> {
             child: AllControlsOverlay(
               customVideoPlayerController: widget.customVideoPlayerController,
               updateVideoState: _updateVideoState,
+              customControlWidget: widget.customControlWidget,
             ),
           ),
         ],

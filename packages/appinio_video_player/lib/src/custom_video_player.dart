@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 
 class CustomVideoPlayer extends StatelessWidget {
   final CustomVideoPlayerController customVideoPlayerController;
+  final Widget? customControlWidget;
+
   const CustomVideoPlayer({
     Key? key,
     required this.customVideoPlayerController,
+    this.customControlWidget,
   }) : super(key: key);
 
   @override
@@ -14,6 +17,7 @@ class CustomVideoPlayer extends StatelessWidget {
     return EmbeddedVideoPlayer(
       isFullscreen: false,
       customVideoPlayerController: customVideoPlayerController,
+      customControlWidget: customControlWidget,
     );
   }
 }

@@ -1,15 +1,17 @@
+import 'package:appinio_video_player/src/controls/control_bar.dart';
 import 'package:appinio_video_player/src/controls/video_settings_button.dart';
 import 'package:appinio_video_player/src/custom_video_player_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:appinio_video_player/src/controls/control_bar.dart';
 
 class AllControlsOverlay extends StatefulWidget {
   final CustomVideoPlayerController customVideoPlayerController;
   final Function updateVideoState;
+  final Widget? customControlWidget;
   const AllControlsOverlay({
     Key? key,
     required this.customVideoPlayerController,
     required this.updateVideoState,
+    this.customControlWidget,
   }) : super(key: key);
 
   @override
@@ -41,34 +43,44 @@ class _AllControlsOverlayState extends State<AllControlsOverlay> {
       behavior: HitTestBehavior.translucent,
       onTap: () => _toggleControlsVisibility(context),
       child: Container(
-        padding: widget.customVideoPlayerController.customVideoPlayerSettings
-            .controlsPadding,
         width: double.infinity,
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           reverseDuration: const Duration(milliseconds: 300),
           child: _controlsVisible
-              ? Column(
+              ? Stack(
                   children: [
-                    if (widget.customVideoPlayerController
-                        .customVideoPlayerSettings.settingsButtonAvailable)
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: VideoSettingsButton(
-                          customVideoPlayerController:
-                              widget.customVideoPlayerController,
-                          updateVideoState: widget.updateVideoState,
-                        ),
+                    if (widget.customControlWidget != null)
+                      widget.customControlWidget!,
+                    Padding(
+                      padding: widget.customVideoPlayerController
+                          .customVideoPlayerSettings.controlsPadding,
+                      child: Column(
+                        children: [
+                          if (widget
+                              .customVideoPlayerController
+                              .customVideoPlayerSettings
+                              .settingsButtonAvailable)
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: VideoSettingsButton(
+                                customVideoPlayerController:
+                                    widget.customVideoPlayerController,
+                                updateVideoState: widget.updateVideoState,
+                              ),
+                            ),
+                          const Spacer(),
+                          if (widget.customVideoPlayerController
+                              .customVideoPlayerSettings.controlBarAvailable)
+                            CustomVideoPlayerControlBar(
+                              customVideoPlayerController:
+                                  widget.customVideoPlayerController,
+                              updateVideoState: widget.updateVideoState,
+                              fadeOutOnPlay: _fadeOutControls,
+                            ),
+                        ],
                       ),
-                    const Spacer(),
-                    if (widget.customVideoPlayerController
-                        .customVideoPlayerSettings.controlBarAvailable)
-                      CustomVideoPlayerControlBar(
-                        customVideoPlayerController:
-                            widget.customVideoPlayerController,
-                        updateVideoState: widget.updateVideoState,
-                        fadeOutOnPlay: _fadeOutControls,
-                      ),
+                    ),
                   ],
                 )
               : null,
